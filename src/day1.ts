@@ -1,16 +1,29 @@
 import { readFile } from "./readFile";
 
+async function parseDayOne() {
+  const data = await readFile("day1.txt");
+  const temp: [number, number][] = data.split("\n").map((line) => {
+    const [first, second] = line.split("   ").map((x) => parseInt(x, 10));
+    return [first, second];
+  });
+
+  return temp.reduce(
+    (
+      [listOne, listTwo]: [number[], number[]],
+      [first, second]: [number, number],
+    ) => {
+      listOne.push(first);
+      listTwo.push(second);
+      return [listOne, listTwo];
+    },
+    [[], []] as [number[], number[]],
+  );
+}
+
 // original
-export default async function dayOnePartOne(): Promise<number> {
+export async function dayOnePartOne(): Promise<number> {
   try {
-    const data = await readFile("day1.txt");
-    const listOne: number[] = [];
-    const listTwo: number[] = [];
-    data.split("\n").forEach((item) => {
-      const foo = item.split("   ");
-      listOne.push(Number.parseInt(foo[0]));
-      listTwo.push(Number.parseInt(foo[1]));
-    });
+    const [listOne, listTwo] = await parseDayOne();
     listOne.sort();
     listTwo.sort();
     const difference: number[] = [];
@@ -59,5 +72,37 @@ async function dayOnePartOneGpt(): Promise<number> {
   } catch (error) {
     console.error("Error processing the file:", error);
     return 0;
+  }
+}
+
+export async function dayOnePartTwo(): Promise<number> {
+  try {
+    const [listOne, listTwo] = await parseDayOne();
+
+    const frequencies = new FrequencyCounter(listTwo);
+
+    return listOne.reduce((acc, val) => {
+      const score = frequencies.get(val) || 0;
+      return val * score + acc;
+    }, 0);
+  } catch {
+    return 0;
+  }
+}
+
+class FrequencyCounter {
+  private frequencyMap: Map<number, number>;
+
+  constructor(numbers: number[]) {
+    this.frequencyMap = new Map();
+
+    numbers.forEach((num) => {
+      const currentFreq = this.frequencyMap.get(num) || 0;
+      this.frequencyMap.set(num, currentFreq + 1);
+    });
+  }
+
+  get(value: number): number {
+    return this.frequencyMap.get(value) || 0;
   }
 }
