@@ -15,3 +15,5 @@ Easy day, but I totally miss more advanced methods on collection.
 First one really easy; part 2 I just brute-forced and had no time to clean up.
 
 ## Day 3
+
+Part one: pretty easy with regexes, I wonder if a parser combinator/ast parser would have been easier
