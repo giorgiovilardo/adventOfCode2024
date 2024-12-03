@@ -17,3 +17,5 @@ First one really easy; part 2 I just brute-forced and had no time to clean up.
 ## Day 3
 
 Part one: pretty easy with regexes, I wonder if a parser combinator/ast parser would have been easier
+
+An easy command parser can be extracted to fix part one and part two and do everything with one pass.

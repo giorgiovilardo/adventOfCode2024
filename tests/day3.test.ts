@@ -6,6 +6,6 @@ describe("day 3", () => {
   });
 
   it("should return the correct value for part 2", async () => {
-    expect(await partTwo()).toBe(1);
+    expect(await partTwo()).toBe(84893551);
   });
 });
