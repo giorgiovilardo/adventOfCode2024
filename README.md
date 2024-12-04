@@ -25,3 +25,6 @@ An easy command parser can be extracted to fix part one and part two and do ever
 Spent more time trying to write transpose methods than real business logic,
 and since i suck at algos I used chat gpt for the diagonal one, and it delivered.
 Thanks new AI overlords!
+
+Part 2 I was really stuck until I realized I had the wrong windowing -_-
+`for` cycles with indexes are really hard for me to grasp for some reason...
