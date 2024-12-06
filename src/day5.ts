@@ -23,8 +23,8 @@ export async function partOne(): Promise<number> {
 }
 
 export async function partTwo(): Promise<number> {
-  const data = await parseDay5();
-  return 0;
+  const [rules, orders] = await parseDay5();
+  return day5Pt2BizLogic(rules, orders);
 }
 
 export function day5Pt1BizLogic(rules: string[], orders: string[]) {
@@ -70,4 +70,36 @@ function isOrderValid(parsedOrder: string[], rules: Map<string, Set<string>>) {
     }
   }
   return true;
+}
+
+export function day5Pt2BizLogic(rules: string[], orders: string[]) {
+  const parsedRules = parseRules(rules);
+  const pagePriorities = Array.from(parseRules(rules).entries())
+    .sort(([_, s1], [__, s2]) => s2.size - s1.size)
+    .map(([x, _]) => x);
+  const parsedOrders = orders.map((order) => order.split(","));
+  const invalidOrders = parsedOrders
+    .filter((x) => !isOrderValid(x, parsedRules))
+    .map((x) => sortByPagePriority(x, pagePriorities));
+  const middles = invalidOrders.map(
+    (inner) => inner[Math.floor(inner.length / 2)],
+  );
+  const result = middles.map((x) => parseInt(x)).reduce(sum);
+  return result;
+}
+
+function sortByPagePriority(order: string[], priorities: string[]): string[] {
+  const result: string[] = [];
+  const notInluded: string[] = [];
+  for (const priority of priorities) {
+    if (order.includes(priority)) {
+      result.push(priority);
+    }
+  }
+  for (const r of order) {
+    if (!priorities.includes(r)) {
+      notInluded.push(r);
+    }
+  }
+  return result.concat(notInluded);
 }

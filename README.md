@@ -28,3 +28,11 @@ Thanks new AI overlords!
 
 Part 2 I was really stuck until I realized I had the wrong windowing -_-
 `for` cycles with indexes are really hard for me to grasp for some reason...
+
+## Day 5
+
+Ez part 1
+
+Tough part 2
+
+look at: topological sort, and before/after data structure
