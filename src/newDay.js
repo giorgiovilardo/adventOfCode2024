@@ -25,9 +25,19 @@ export async function partOne(): Promise<number> {
 
 export async function partTwo(): Promise<number> {
   return 0;
-}`;
+}
 
-const testTemplate = `import { partOne, partTwo } from "../src/day${day}";
+export function day${day}Pt1BusinessLogic() {};
+
+export function day${day}Pt2BusinessLogic() {};
+`;
+
+const testTemplate = `import {
+  day${day}Pt1BusinessLogic,
+  day${day}Pt2BusinessLogic,
+  partOne,
+  partTwo,
+} from "../src/day${day}";
 
 describe("day ${day}", () => {
   it("should return the correct value for part 1", async () => {
@@ -36,6 +46,16 @@ describe("day ${day}", () => {
 
   it("should return the correct value for part 2", async () => {
     expect(await partTwo()).toBe(1);
+  });
+
+  const testData = "";
+
+  it("should return the correct value for part 1 test data", () => {
+    expect(day${day}Pt1BusinessLogic(testData.split("\\n"))).toBe(1);
+  });
+
+  it("should return the correct value for part 2 test data", () => {
+    expect(day${day}Pt1BusinessLogic(testData.split("\\n"))).toBe(1);
   });
 });
 `;
