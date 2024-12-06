@@ -11,7 +11,8 @@ export async function partOne(): Promise<number> {
 }
 
 export async function partTwo(): Promise<number> {
-  return 0;
+  const data = await parseDay6();
+  return day6Pt2BizLogic(data);
 }
 
 export function day6Pt1BizLogic(data: string[]): number {
@@ -20,6 +21,46 @@ export function day6Pt1BizLogic(data: string[]): number {
     board.moveGuard();
   }
   return board.visitedLocationsCount();
+}
+
+export function day6Pt2BizLogic(data: string[]): number {
+  const loopObjectPos: [number, number][] = [];
+  const finishedBoard = new Board(data);
+  while (!finishedBoard.hasFinished()) {
+    finishedBoard.moveGuard();
+  }
+  const walkedLocs = finishedBoard.visitedLocations;
+  for (const walkedLoc of walkedLocs) {
+    const board = new Board(data);
+    board.setObstacle(walkedLoc.x, walkedLoc.y);
+    while (!board.inLoop) {
+      board.moveGuard();
+      if (board.hasFinished()) {
+        break;
+      }
+    }
+    if (board.inLoop) {
+      loopObjectPos.push([walkedLoc.x, walkedLoc.y]);
+    }
+  }
+  // const maxRow = data.length - 1;
+  // const maxCol = data[0].length - 1;
+  // for (let i = 0; i <= maxRow; i++) {
+  //   for (let j = 0; j <= maxCol; j++) {
+  //     const board = new Board(data);
+  //     board.setObstacle(i, j);
+  //     while (!board.inLoop) {
+  //       board.moveGuard();
+  //       if (board.hasFinished()) {
+  //         break;
+  //       }
+  //     }
+  //     if (board.inLoop) {
+  //       loopObjectPos.push([i, j]);
+  //     }
+  //   }
+  // }
+  return loopObjectPos.length;
 }
 
 enum Cell {
@@ -40,8 +81,10 @@ class Board {
   private board: Cell[][];
   private readonly originalBoard: string[];
   private guardPosition: [number, number] = [-2, -2];
-  private visitedLocations: VisitedLocation[] = [];
+  visitedLocations: VisitedLocation[] = [];
   private guardOrientation: GuardOrientation = GuardOrientation.Up;
+  private inLoopSet: [VisitedLocation, GuardOrientation][] = [];
+  public inLoop: boolean = false;
 
   constructor(board: string[]) {
     this.originalBoard = board;
@@ -56,7 +99,9 @@ class Board {
         if (cell === "^") {
           cellRow.push(Cell.Free);
           this.guardPosition = [i, j];
-          this.visitedLocations.push({ x: i, y: j });
+          const visitedLocation = { x: i, y: j };
+          this.visitedLocations.push(visitedLocation);
+          this.inLoopSet.push([visitedLocation, this.guardOrientation]);
         }
         if (cell === "#") {
           cellRow.push(Cell.Obstacle);
@@ -90,12 +135,25 @@ class Board {
       return;
     }
     this.guardPosition = newPosition;
+    const visitedLocation = { x: newPosition[0], y: newPosition[1] };
     if (
       !this.visitedLocations.some(
-        (loc) => loc.x === newPosition[0] && loc.y === newPosition[1],
+        (loc) => loc.x === visitedLocation.x && loc.y === visitedLocation.y,
       )
     ) {
-      this.visitedLocations.push({ x: newPosition[0], y: newPosition[1] });
+      this.visitedLocations.push(visitedLocation);
+    }
+    if (
+      this.inLoopSet.some(
+        ([vl, go]) =>
+          vl.x === visitedLocation.x &&
+          vl.y === visitedLocation.y &&
+          go === this.guardOrientation,
+      )
+    ) {
+      this.inLoop = true;
+    } else {
+      this.inLoopSet.push([visitedLocation, this.guardOrientation]);
     }
   }
 
@@ -148,5 +206,9 @@ class Board {
 
   public visitedLocationsCount(): number {
     return this.visitedLocations.length;
+  }
+
+  public setObstacle(x: number, y: number) {
+    this.board[x][y] = Cell.Obstacle;
   }
 }

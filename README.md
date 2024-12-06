@@ -46,3 +46,6 @@ SCALA I MISS YOU
 
 I was bitten hard by reference equality of TS, as I put objects into a Set thinking
 it would compare hash of the sets for equalities :\ I think this is default in Py...
+
+The object modeling helped for part2, as it was easy-ish to add all the needed crap
+to make it work. I struggled a bit to understand the trick, but I got it!
