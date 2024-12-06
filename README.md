@@ -36,3 +36,13 @@ Ez part 1
 Tough part 2
 
 look at: topological sort, and before/after data structure
+
+## Day 6
+
+I love toy problems in OOP, it takes a lot of time but the
+satisfaction of doing new thing -> do thing -> do thing -> result is amazing.
+This would have been fun also in a recursive "state of the world" functional style.
+SCALA I MISS YOU
+
+I was bitten hard by reference equality of TS, as I put objects into a Set thinking
+it would compare hash of the sets for equalities :\ I think this is default in Py...
